@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUserTodo, fetchUserTodo, selectTodos } from '../../../store/features/todoSlice';
 import Button from '@/components/form/Button';
+import Card from '@/components/common/Card';
 
 const DisplayTodo = ({ setEditingTodo, currentUserId }) => {
   const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const DisplayTodo = ({ setEditingTodo, currentUserId }) => {
 
   useEffect(() => {
     if (status === 'idle') {
+      
       dispatch(fetchUserTodo());
     }
   }, [dispatch, status]);
@@ -37,8 +39,8 @@ const DisplayTodo = ({ setEditingTodo, currentUserId }) => {
           {todos.result
             .filter((todo) => todo.userId === currentUserId)
             .map((todo) => (
-              <li key={todo.id}>
-                Task: {todo.task} | Description: {todo.desc} | Email: {todo.email}
+              <div key={todo.id}>
+                <Card task={todo.task} desc={todo.desc} email={todo.email}/>
                 <Button
                   type="button"
                   onClick={() => setEditingTodo(todo)}
@@ -53,7 +55,7 @@ const DisplayTodo = ({ setEditingTodo, currentUserId }) => {
                 >
                   Delete
                 </Button>
-              </li>
+              </div>
             ))}
         </ul>
       ) : (

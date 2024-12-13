@@ -13,7 +13,6 @@ const page = () => {
 
   useEffect(() => {
     if (user) {
-      console.log(user)
         router.push("/route");
     }
 }, [user, router]);
