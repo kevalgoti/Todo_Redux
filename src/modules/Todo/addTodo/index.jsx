@@ -1,45 +1,21 @@
-'use client';
-import React, { useState, useEffect } from 'react';
 import Input from '../../../components/form/Input';
 import Button from '../../../components/form/Button';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { postUserTodo, updateUserTodo } from '@/store/features/todoSlice';
+import { postUserTodo } from '@/store/features/todoSlice';
 
-function AddTodo({ currentTodo, clearTodo }) {
-  const [task, setTask] = useState('');
-  const [desc, setDesc] = useState('');
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+function AddTodo() {
+  const [todoData, setTodoData] = useState({ title: '', description: '' });
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (currentTodo) {
-      setTask(currentTodo.task);
-      setDesc(currentTodo.desc);
-      setEmail(currentTodo.email);
-    } else {
-      setTask('');
-      setDesc('');
-      setEmail('');
-    }
-  }, [currentTodo]);
+  const handleChange = (e) => {
+    setTodoData({ ...todoData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    if (currentTodo) {
-      dispatch(updateUserTodo({ id: currentTodo.id, updatedTodo: { task, desc, email } }))
-        .finally(() => {
-          setIsSubmitting(false);
-          clearTodo();
-        });
-    } else {
-      dispatch(postUserTodo({ task, desc, email }))
-        .finally(() => {
-          setIsSubmitting(false);
-        });
-    }
+    dispatch(postUserTodo(todoData));
+    setTodoData({ title: '', description: '' });
   };
 
   return (
@@ -47,45 +23,19 @@ function AddTodo({ currentTodo, clearTodo }) {
       <form onSubmit={handleSubmit}>
         <Input
           type="text"
-          name="task"
-          placeholder="Task"
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
+          name="title"
+          placeholder="Enter a title"
+          value={todoData.title}
+          onChange={handleChange}
         />
-
         <Input
           type="text"
-          name="desc"
-          placeholder="Description"
-          value={desc}
-          onChange={(e) => setDesc(e.target.value)}
+          name="description"
+          placeholder="Enter a description"
+          value={todoData.description}
+          onChange={handleChange}
         />
-
-        <Input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="btn-primary"
-        >
-          {currentTodo ? 'Save' : 'Submit'}
-        </Button>
-
-        {currentTodo && (
-          <Button
-            type="button"
-            onClick={clearTodo}
-            className="btn-secondary"
-          >
-            Cancel
-          </Button>
-        )}
+        <Button type="submit">Add Todo</Button>
       </form>
     </div>
   );

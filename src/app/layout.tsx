@@ -15,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="description" content={metadata.description} />
       </head>
       <body>
+        
         <PageLayout>{children}</PageLayout>
       </body>
     </html>
